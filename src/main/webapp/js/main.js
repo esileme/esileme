@@ -1,302 +1,158 @@
-$(function() {
-    var i = "box",
-        n = {
-            init: function() {
-                this.scroll_animate(), $("#b2top").click(function() {
-                    $("html, body").stop().animate({
-                        scrollTop: 0
-                    })
-                }), $("#overview-aside-nav ul").navscroll({
-                    sec: 1e3,
-                    url_hash: !1,
-                    head_hight: 0
-                }), $("#overview-mainnav").navscroll({
-                    sec: 1e3,
-                    url_hash: !1,
-                    head_hight: 0
-                })
-            },
-            scroll_animate: function() {
-                $(window).scroll(function() {
-                    for (var i = window.innerHeight, n = $(".anim").length, o = 0; o < n; o++) $(window).scrollTop() > $(".anim").eq(o).offset().top - i / 4 && $(".anim").eq(o).addClass("on")
-                })
-            },
-        };
-    n.init()
-});
-(function($){
-	/* --------------------------------------------------
-  Contact Pages
--------------------------------------------------- */
-
-	$('.show-map').on('click', function(e){
-	  e.preventDefault();
-	  $('.contact-info-wrapper').toggleClass('map-open');
-	  $('.show-info-link').toggleClass('info-open');
-	});
-
-	$('.show-info-link').on('click', function(e){
-	  e.preventDefault();
-	  $('.contact-info-wrapper').toggleClass('map-open');
-	  $(this).toggleClass('info-open');
-	});
+;(function () {
+	
+	'use strict';
 
 
 
-})(jQuery);
+	var isMobile = {
+		Android: function() {
+			return navigator.userAgent.match(/Android/i);
+		},
+			BlackBerry: function() {
+			return navigator.userAgent.match(/BlackBerry/i);
+		},
+			iOS: function() {
+			return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		},
+			Opera: function() {
+			return navigator.userAgent.match(/Opera Mini/i);
+		},
+			Windows: function() {
+			return navigator.userAgent.match(/IEMobile/i);
+		},
+			any: function() {
+			return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+		}
+	};
 
+	var fullHeight = function() {
 
+		if ( !isMobile.any() ) {
+			$('.js-fullheight').css('height', $(window).height());
+			$(window).resize(function(){
+				$('.js-fullheight').css('height', $(window).height());
+			});
+		}
 
-/* --------------------------------------------------
-	Contact Form JS Validation & AJAX call 
--------------------------------------------------- */
-$(function() {
+	};
 
-//	Regular Expressions
-var expEmail = /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[_a-z0-9-]+(\.[_a-z0-9-]+)*(\.[a-z]{2,4})$/;
-var	expLettersOnly = /^[A-Za-z ]+$/;
+	// Animations
 
-//	Checks if a field has the correct length
-function validateLength ( fieldValue, minLength ) {
-	return ( $.trim( fieldValue ).length > minLength );
-}
+	var contentWayPoint = function() {
+		var i = 0;
+		$('.animate-box').waypoint( function( direction ) {
 
-//	Validate form on typing
-$( '.form-ajax' ).on( 'keyup', 'input.validate-locally', function() {
-	validateField( $(this) );
-});
+			if( direction === 'down' && !$(this.element).hasClass('animated') ) {
+				
+				i++;
 
-//	AJAX call
-$( '.form-ajax' ).submit(function(e) {
-	e.preventDefault();
-	var $this = $( this ),
-			action = $this.attr( 'action' );
+				$(this.element).addClass('item-animate');
+				setTimeout(function(){
 
-	// The AJAX requrest
-	$.post(
-			action,
-			$this.serialize(),
-			function( data ) {
-				$( '.ajax-message' ).html( data );
+					$('body .animate-box.item-animate').each(function(k){
+						var el = $(this);
+						setTimeout( function () {
+							var effect = el.data('animate-effect');
+							if ( effect === 'fadeIn') {
+								el.addClass('fadeIn animated');
+							} else if ( effect === 'fadeInLeft') {
+								el.addClass('fadeInLeft animated');
+							} else if ( effect === 'fadeInRight') {
+								el.addClass('fadeInRight animated');
+							} else {
+								el.addClass('fadeInUp animated');
+							}
+
+							el.removeClass('item-animate');
+						},  k * 200, 'easeInOutExpo' );
+					});
+					
+				}, 100);
+				
 			}
-	);
-});
 
-//	Validates the fileds
-function validateField ( field ) {
-	var errorText = "",
-			error = false,
-			value = field.val(),
-			siblings = field.siblings( ".alert-error" );
+		} , { offset: '85%' } );
+	};
 
-	// Test the name field
-	if ( field.attr("name") === "name" ) {
-		if ( !validateLength( value, 2 ) ) {
-					error = true;
-					errorText += '<i class="fa fa-info-circle"></i> The name is too short!<br>';
-					$('input[name="name"]').addClass('input-error');
-		} else {
-			$('input[name="name"]').removeClass('input-error');
-		}
 
-		if ( !expLettersOnly.test( value ) ) {
-					error = true;
-					errorText += '<i class="fa fa-info-circle"></i> The name can contain only letters and spaces!<br>';
-					$('input[name="name"]').addClass('input-error-2');
-		} else {
-			$('input[name="name"]').removeClass('input-error-2');
-		}
-	}
+	var burgerMenu = function() {
 
-	// Test the email field
-	if ( field.attr("name") === "email" ) {
-		if ( !expEmail.test( value ) ) {
-					error = true;
-					errorText += '<i class="fa fa-info-circle"></i> Enter correct email address!<br>';
-					$('input[name="email"]').addClass('input-error');
-		} else {
-			$('input[name="email"]').removeClass('input-error');
-		}
-	}
+		$('.js-fh5co-nav-toggle').on('click', function(event){
+			event.preventDefault();
+			var $this = $(this);
 
-	// Display the errors
-	siblings.html( errorText );
-
-	}
-
-});
+			if ($('body').hasClass('offcanvas')) {
+				$this.removeClass('active');
+				$('body').removeClass('offcanvas');	
+			} else {
+				$this.addClass('active');
+				$('body').addClass('offcanvas');	
+			}
+		});
 
 
 
+	};
 
+	// Click outside of offcanvass
+	var mobileMenuOutsideClick = function() {
 
+		$(document).click(function (e) {
+	    var container = $("#fh5co-aside, .js-fh5co-nav-toggle");
+	    if (!container.is(e.target) && container.has(e.target).length === 0) {
 
+	    	if ( $('body').hasClass('offcanvas') ) {
 
+    			$('body').removeClass('offcanvas');
+    			$('.js-fh5co-nav-toggle').removeClass('active');
+			
+	    	}
+	    	
+	    }
+		});
 
+		$(window).scroll(function(){
+			if ( $('body').hasClass('offcanvas') ) {
 
+    			$('body').removeClass('offcanvas');
+    			$('.js-fh5co-nav-toggle').removeClass('active');
+			
+	    	}
+		});
 
+	};
 
-
-// Google Map Custom js
-var marker;
-var image = 'images/map-marker.png';
-function initMap() {
-var myLatLng = {lat: 39.79, lng: -86.14};
-
-// Specify features and elements to define styles.
-var styleArray = [
-    {
-        "featureType": "administrative",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": "-100"
-            }
-        ]
-    },
-    {
-        "featureType": "administrative.province",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "off"
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": -100
-            },
-            {
-                "lightness": 40
-            },
-            {
-                "visibility": "on"
-            }
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": -100
-            },
-            {
-                "lightness": "50"
-            },
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": "-100"
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "all",
-        "stylers": [
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "all",
-        "stylers": [
-            {
-                "lightness": "30"
-            }
-        ]
-    },
-    {
-        "featureType": "road.local",
-        "elementType": "all",
-        "stylers": [
-            {
-                "lightness": "40"
-            }
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "all",
-        "stylers": [
-            {
-                "saturation": -100
-            },
-            {
-                "visibility": "simplified"
-            }
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "hue": "#ffff00"
-            },
-            {
-                "lightness": -20
-            },
-            {
-                "saturation": -97
-            }
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "labels",
-        "stylers": [
-            {
-                "lightness": -25
-            },
-            {
-                "saturation": -100
-            }
-        ]
-    }
-];
+	var sliderMain = function() {
 		
-var map = new google.maps.Map(document.getElementById('map'), {
-  center: myLatLng,
-  scrollwheel: false,
-   // Apply the map style array to the map.
-  styles: styleArray,
-  zoom: 9
-});
+	  	$('#fh5co-hero .flexslider').flexslider({
+			animation: "fade",
+			slideshowSpeed: 5000,
+			directionNav: true,
+			start: function(){
+				setTimeout(function(){
+					$('.slider-text').removeClass('animated fadeInUp');
+					$('.flex-active-slide').find('.slider-text').addClass('animated fadeInUp');
+				}, 500);
+			},
+			before: function(){
+				setTimeout(function(){
+					$('.slider-text').removeClass('animated fadeInUp');
+					$('.flex-active-slide').find('.slider-text').addClass('animated fadeInUp');
+				}, 500);
+			}
 
-var directionsDisplay = new google.maps.DirectionsRenderer({
-  map: map
-});
+	  	});
 
-// Create a marker and set its position.
-marker = new google.maps.Marker({
-  map: map,
-  icon: image,
-  draggable: true,
-  animation: google.maps.Animation.DROP,
-  position: myLatLng
-});
-marker.addListener('click', toggleBounce);
-}
+	};
 
-function toggleBounce() {
-if (marker.getAnimation() !== null) {
-  marker.setAnimation(null);
-} else {
-  marker.setAnimation(google.maps.Animation.BOUNCE);
-}
-}
+	// Document on load.
+	$(function(){
+		fullHeight();
+		contentWayPoint();
+		burgerMenu();
+		mobileMenuOutsideClick();
+		sliderMain();
+	});
+
+
+}());
