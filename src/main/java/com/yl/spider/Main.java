@@ -5,6 +5,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * =================================
  * <p>
@@ -26,12 +31,24 @@ public class Main {
         Elements result = contian.get(0).getElementsByClass("p4p-search-result");
         result.get(0).getElementsByClass("");*/
 
-
+        List<Object> datas = new ArrayList<>();
         Element searchResult = body.getElementById("searchResult");
         Elements item = searchResult.getElementsByClass("item");
         for (Element element : item) {
-            System.out.println(element.toString());
+            //System.out.println(element.toString());
+            Map<String, String> data = new HashMap<>();
+            Elements a = element.getElementsByTag("a");
+            String href = a.get(0).attr("href");
+            String title = a.get(0).getElementsByClass("title").text();
+            String price = a.get(0).getElementsByTag("strong").get(0).text();
+            String payNum = a.get(0).getElementsByClass("payNum").text();
+            data.put("title",title);
+            data.put("price",price);
+            data.put("payNum",payNum);
+            data.put("href",href);
+            datas.add(data);
         }
+        System.out.println(datas.size());
 
 
     }
